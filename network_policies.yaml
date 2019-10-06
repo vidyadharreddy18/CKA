@@ -1,0 +1,47 @@
+description:>
+  By default in kubernetes, all the pods have access to every other pod. In certain instances,
+  we may need to avoid this kind of connectivity because of security isssues. So how doe we 
+  restrict other pods from accessing our pod. The answer is network policies.
+  Note: Ingress refers to anything that is incoming, Egress: refers to anything that is out-
+  going. Lets us consider an example of three pods front-end, backend, db. By default all the pods
+  will be able to communicate with each other, but in our case we wish to restrict the frontend pod
+  from directly accessing the database pod. we will achieve this using network policy. We can define 
+  rule within network policy so as to only allow ingress traffic from backend pod on a specific port.
+  Note: flannel doesnot support networkpolicy
+
+commands:>
+  kubectl get networkpolicy
+  kubectl describe networkpolicy <net-policy-name>
+  
+---
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: internal-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:                       #same as label defined on the pod
+      name: internal
+  policyTypes:
+  - Egress
+  - Ingress
+  ingress:
+    - {}
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          name: mysql
+    ports:
+    - protocol: TCP
+      port: 3306
+
+  - to:
+    - podSelector:
+        matchLabels:
+          name: payroll
+    ports:
+    - protocol: TCP
+      port: 8080
