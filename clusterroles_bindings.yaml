@@ -5,7 +5,7 @@ description: >
   scoped objects like nodes, PV, certificatesigningrequests, namespaces etc. To list all the non namespaced 
   resources we can run 'kubectl api-resources --namespaced=false'. With clusterroles and bindings we can also
   define namespace scoped resources like pods etc. 
- 
+  In the below example we are creating the clusterroles for michelle user for managing nodes, volumes and storageclasses.
  
 ---
 #clusterrole creation
