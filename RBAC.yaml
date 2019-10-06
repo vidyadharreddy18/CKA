@@ -19,8 +19,8 @@ Description: >
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-name: developer
-namespace: default
+  name: developer
+  namespace: default
 rules:
 - apiGroups: [""]                         #empty for core groups
   resources: ["pods"]
