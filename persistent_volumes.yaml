@@ -1,0 +1,134 @@
+description:>
+  In normal volumes, we configure volumes within the pod spec file. If we have large cluster with lot
+  of users deploying lot of pods the users need to configure storage every time this is a bit complex.
+  So in order to manage storage centrally we have PV. with PV a the admin can create large pool of 
+  storage and then users can carve out peices from it as required. Simply a PV is a cluster wide pool
+  of storage volume. Now with PV, the users can claim storage using PVC. 
+  PV creation is of two types: static(the admin needs to create the storage before hand), Dynamic(When
+  requests PVC then the PV is created simultaneously), for this we need to configure default storage class
+  inside k8s. 
+  
+  #static pv creation>
+  As the name suggests, the admin needs to create the PV before hand. 
+
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-qws
+spec:
+  capacity: 15Gi
+  accessModes: 
+  - ReadWriteOnce #ReadWriteMany, ReadOnlyMany
+  storageClassName: slow                        #this is like a tag that we give to the PV, ex if ssd then we mention slow, HDD fast etc
+  awsElasticBlockStore: 
+    volumeID: <volume id on aws>
+    fsType: ext4
+    
+    
+---
+#now we need to claim PV
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-disk-cliam
+spec:
+  resources:
+    requests: 
+      storage: 15Gi
+  accessMode:
+    - ReadWriteOnce
+  storageClassName: slow
+    
+---
+#having created the PVC now we need to reference this claim inside pod.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  volumes:
+  - name: test-volume
+    persistentVolumeClaim:               #here we need to the PVC name
+      claimName: my-disk-claim
+  containers:
+   - name: test-container
+     image: nginx
+     volumeMounts:
+     - mountPath: /test-pd
+     
+
+--- 
+#DYNAMIC PV
+description:>
+  as the name suggests there is no need to create PV in before hand, they are created parallely when PVC are created. 
+  In Dynamic PV we will not create PV but create storageclass, these storage classes are like the tags to the storage
+  based on the type of disk in the backend. ex: SDD fast, HDD slow, GlusterFS distributed. with multiple storage classes
+  the administartor needs to define the default storage class because when developer misses the storageclass input then
+  PVC will use default storageclass. With Dynamic PVC, the developer need not worry about the size of the storage.
+  
+---
+#creating storage class
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: fast
+provisioner: kubernets.io/gce-pd  or kuberntes.io/aws-ebs                    #this determines the volume plugin
+parameters:
+  type: pd-ssd/pd-standard             #default will be pd-standard
+  
+
+---
+#step2: creating PVC.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-disk-claim-1
+spec:
+  resources:
+    requests: 
+      storage: 30Gi
+  accessMode:
+  - ReadWriteOnce
+  storageClassName: fast
+    
+----
+#step3: now refereing this in pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pv-pod
+spec:
+  volumes:
+  - name: test-volume
+    persistentVolumeClaim:               #here we need to the PVC name
+      claimName: my-disk-claim-1
+  containers:
+   - name: test-container
+     image: nginx
+     volumeMounts:
+     - mountPath: /test-pd
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
