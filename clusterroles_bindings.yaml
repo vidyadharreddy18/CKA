@@ -1,1 +1,35 @@
-#
+description: >
+  Role and role bindings are namespaced i.e we can limit users to access resources of specific namespace.
+  What if we want users to access resources of multiple namespaces then we have clusterroles and cluster
+  role bindings. Not only this, with clusterroles and bindings we can manage non namespaced i.e cluster 
+  scoped objects like nodes, PV, certificatesigningrequests, namespaces etc. To list all the non namespaced 
+  resources we can run 'kubectl api-resources --namespaced=false'. With clusterroles and bindings we can also
+  define namespace scoped resources like pods etc. 
+ 
+ 
+---
+#clusterrole creation
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: node-admin
+rules:
+- apiGroups: [""]                         #empty for core groups
+  resources: ["nodes"]
+  verbs: ["list", "create", "delete", "watch", "get"]
+  
+  
+---
+#now we need to bind the above clusterrole to the user using rolebindings
+apiVersion: rbac.authorization.k8s.io/v1
+kind: CliusterRoleBinding
+metadata: 
+  name: michelle-binding
+subjects:                  #here we mention the user details
+- kind: User
+  name: michelle
+  apiGroup: rbac.authorization.k8s.io
+roleRef:                  #here we mention the role details.
+  kind: ClusterRole
+  name: node-admin
+  apiGroup: rbac.authorization.k8s.io
