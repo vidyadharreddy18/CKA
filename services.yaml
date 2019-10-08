@@ -1,0 +1,69 @@
+#pod definition file
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    app: my-app
+spec:
+  contianers:
+    - name: nginx-contianer
+      image: nginx
+
+
+
+#NodePort service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-node-service
+spec:
+  selector:
+    app: my-app
+  type: NodePort
+  ports:
+    - targetPort: 8080
+      port: 8080
+      nodePort: 308080
+
+
+#ClusterIP service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-cluster-service
+spec:
+  selector: 
+    app: my-app
+  type: ClusterIP
+  ports:
+    - targetPort: 80
+      port: 80
+
+
+#loadBalancer service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-lb-service
+spec:
+  selector: 
+    app: my-app
+  type: LoadBalancer
+  ports:
+    - nodePort: 31080
+      port: 80
+      targetPort: 80
+  
+  
+  
+  
+  
+  
+  
+  
+    
