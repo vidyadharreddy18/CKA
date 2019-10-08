@@ -1,5 +1,6 @@
 description:>
-  The only difference between RC and Replicasets is that Replicaset takes into account already running pods.
+  The only difference between RC and Replicasets is that Replicaset takes into account already running pods. NOTE replicaset 
+  doesnot manage the pods created by the replication controller. although labels are matched.
   
 
 apiVersion: apps/v1
