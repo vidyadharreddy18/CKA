@@ -1,0 +1,64 @@
+descriptions:>
+  configmaps are use to provide custom configurations to the pods for running.
+  we have three ways in which we can provide configurations to the pods.
+  1. configuration files, 2. environmental variables, 3. command linearguments
+  if there are so many configuration sto be supplied then 2 and 3 are not preferable.
+  ConfigMaps is a k8s object which allows us to seprate the configurations from pods.
+  We have secrets which does the same job as the configmaps but secrets are used to handle sensitive data,
+  whereas configmaps for overall configurations of the pod.
+  To create configmap
+  kubectl create configmap <map-name> <data-source>; data-source can be a directory, file and a literal value.
+  
+#configmaps from directory:
+kubectl create configmap game-config --from-file=/home/local/scartch/
+---
+
+
+
+#configmap from file
+kubectl create configmap game-config --from-file=redis-config
+#there are 3 ways in which we can inject the configmaps to pods.
+1. as ENV, 2. As single ENV 3. from volumes
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis
+spec:
+  containers:
+  - name: redis
+    image: redis
+    volumeMounts:
+    - mountPath: /redis-master
+      name: config
+   volumes:
+    configMap:
+      name: <name of config map>
+      items:
+      - key: <config-file name>
+        path: <path to config file>
+        
+        
+#configmaps from literals
+kubectl create configmap special-config --from-literal=special.how=very
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod
+spec:
+  containers:
+  - name: test-container
+    image: k8s.gcr.io/busybox
+    command: [".bin/sh", "-c", "env"]
+    env:
+      - name: SPECIAL_LEVEL_KEY
+      valueFrom:
+        configMapKeyRef:
+          name: special-config
+          key: special.how
+
+
+
+
