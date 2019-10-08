@@ -1,0 +1,22 @@
+Description:>
+ DaemonSets ensures that a copy of each specified pod is always running on all the nodes.
+ Very usefull when we need to deploy monitoring tools.
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+   name: my-deamon
+   label: 
+     type: daemon-logmonitoring
+spec:
+  selector:
+    matchLabels: 
+      app: monitoring
+  template:
+    metadata:
+      labels: 
+        app: monitoring
+    spec:
+      container:
+      - name: elastic
+        image: ElasticSearch
