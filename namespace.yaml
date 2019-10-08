@@ -1,8 +1,24 @@
+description:> 
+  A namespace is like a tenant. We can create the namespace, assign users, limit resources etc.
+  Kubectl create namespace dev
+
+---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: dev
 
-OR 
-
-kubectl create namespace dev
+#To limit resources in a namespace we can create resource quotas
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata: 
+  name: compute-quota
+  namespace: dev
+spec:
+  hard:
+    pods: "10"
+    requests.cpu: "4"
+    requests.memory: 5Gi
+    limits.cpu: "10"
+    limits.memory: 10Gi
