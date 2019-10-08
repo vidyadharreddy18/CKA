@@ -7,7 +7,7 @@ metadata:
   labels:
     app: my-app
 spec:
-  contianers:
+  containers:
     - name: nginx-contianer
       image: nginx
 
