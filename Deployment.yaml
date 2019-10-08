@@ -31,4 +31,18 @@ spec:  replicas: 3
         - name: nginx
           image: nginx
         
+#USE case1 update
+1. kubectl set image deploy nginx-deployment nginx-container=nginx:1.9.1
+2. kubectl edit deploy nginx-deploy
+command to check rollout status: kubectl rollout status deployment/nginx-deployment
 
+#usecase2 rollback, lets first edit deployment with wrong image and then rollback
+kubectl set image deploy nginx-deployment nginx-container=nginx:1.91 --record    #record option means k8s will record this cokmmand in its history
+kubectl rollout status deployment/nginx-deployment       #rollout status will be searching for something.
+kubectl rollout history deployment/nginx-deployment      #to see what command was run earlier. Now we realised error in the command
+kubectl rollout undo deployment/nginx-deployment          #rollback by undo
+
+
+#usecase3 scaleup and scaledown pod instances in deployment.
+kubectl scale deployment nginx-deployment --replicas 5
+kubectl scale deployment nginx-deployment --replicas 1
