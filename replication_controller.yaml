@@ -1,0 +1,22 @@
+description:>
+  ReplicationController ensures that specified number of pods are always running. It will not take into account 
+  already running pods. We have ReplicaSet for managing the already running pods
+  
+  
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: nginx-replication
+  labels:
+    type: web-server
+spec:
+  template:
+    metadata:
+      name: nginx
+      labels:
+        type: web-server
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx
+  replicas: 3
