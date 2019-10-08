@@ -5,7 +5,7 @@ Description:>
   3. Can we pause the upgrade process and resume after testing?
   4. Can we fall back to previous version if the v2 has errors? rollback.
   The answer to above questions is Deployments.
-  Deployment types: Recreate[shutdown v1 pods and then starts deplying v2, results in app downtime], Rolling
+  Deployment types> Recreate[shutdown v1 pods and then starts deplying v2, results in app downtime], Rolling
   updates[updates one after the other, first version B pod will be created and when it is ready to take the traffic,
   one pod of version A is taken down. It is the default update strategy in k8s], Canary [first update more than one instance, 
   do testing and then update the remaining, then when version B is ready takedown version A], Blue/Green[exactly same number of
@@ -18,12 +18,10 @@ metadata:
   name: nginx-deployment
   labels:
     type: nginx-app
-spec:
-  replicas: 3
-  selectors:
-    matchLables: 
-      name: nginx-app
-  template:
+spec:  replicas: 3
+  selector:
+    matchLabels:
+      type: nginx-app  template:
     metadata:
       name: nginx-pod
       labels:
