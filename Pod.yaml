@@ -1,0 +1,16 @@
+#simple example to run multiple conatianers in a pod
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod 
+  labels:
+    type: frontend
+spec:
+  containers:
+    - name: ubuntu
+      image: ubuntu
+      command: ["/bin/bash", "-ec", "while :; do echo '.'; sleep 5 ; done"]
+    - name: nginx
+      image: nginx
+    
