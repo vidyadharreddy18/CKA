@@ -18,10 +18,12 @@ metadata:
   name: nginx-deployment
   labels:
     type: nginx-app
-spec:  replicas: 3
+spec:  
+  replicas: 3
   selector:
     matchLabels:
-      type: nginx-app  template:
+      type: nginx-app  
+  template:
     metadata:
       name: nginx-pod
       labels:
