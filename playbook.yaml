@@ -17,3 +17,6 @@
     - name: Install nginx
       apt: name=nginx state=latest
       
+#hosts need to be matched with the hosts in inventory file /etc/ansible/hosts
+# to check ping use 'ansible -m ping host1'
+#to run playbook 'ansible-playbook <playbook.yml>'
