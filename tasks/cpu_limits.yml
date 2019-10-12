@@ -1,0 +1,29 @@
+description:>
+  task2: Assigning CPU resorces to pods and containers.
+  We specify the minimum cpu resources in resources.requests.cpu and we specify the limits using 
+  resources.requests.limits. In the spec.containers.args we are specifying the container to start
+  with 2 vcpus.
+  Note: Although we specified the container cpu limits as 1 vcpus and specifying to use 2vcpus using args, 
+  this will not set pod to a pending state because the pod is throrrled, the pod will still be running state with maximum limit set.
+  Another case could be, if the node has only one 1vcpu and we specified args as 2vcpus then also the pod will not be in pending state
+  it will be running state with maximum available node cpus.
+  
+  
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+  namespace: mem-test
+spec:
+  containers:
+  - name: my-container
+    image: virsh/stress
+    resources:
+      requests:
+        cpu: "0.5"
+      limits:
+        cpu: "1"
+    args:
+    - -cpus
+    - "2"
+        
