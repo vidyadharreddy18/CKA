@@ -1,0 +1,143 @@
+description:>
+  Task3: Quality of services in k8s. This tasks shows examples for various QoS in kubernetes.
+  In k8s there are 3 QoS:
+  1.Burstable [limts=requests]
+  2.Guaranteed. [limits>requests]
+  3.BestEffort. [no limts and no requests]
+
+
+#QoS class: Guaranteed
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    resources:
+      requests:
+        memory: "200Mi"
+        cpu: "2"
+      limits:
+        memory: "200Mi"
+        cpu: "2"
+        
+
+
+---
+#QoS Guareenteed
+# If a Container specifies its own memory limit, but does not specify a memory request, Kubernetes automatically assigns a memory
+#request that matches the limit. Similarly, if a Container specifies its own CPU limit, but does not specify a CPU request, Kubernetes
+#automatically assigns a CPU request that matches the limit.
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    resources:
+      limits:
+        memory: "200Mi"
+        cpu: "2"
+
+
+
+---
+#If only memory/cpu requests and limits are mentioned then QoS will be Burstable since only one resource limitation is present
+and other can still burst
+QoS: Burstable
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    resources:
+      requests:
+        #memory: "200Mi"
+        cpu: "2"
+      limits:
+ #       memory: "200Mi"
+        cpu: "2"
+        
+        
+---
+#QoS: Burstable
+#if only resources.requests is mentioned then QoS will be burstable.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    resources:
+      requests:
+        memory: "200Mi"
+        cpu: "2"
+        
+        
+---
+#QoS Burstable.
+#if requests is less than limits 
+
+spec:
+  containers:
+  - image: nginx
+    imagePullPolicy: Always
+    name: qos-demo-2-ctr
+    resources:
+      limits:
+        memory: 200Mi
+      requests:
+        memory: 100Mi
+...
+  qosClass: Burstable
+  
+
+---
+#QoS BestEffort
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: qos-demo-3
+  namespace: qos-example
+spec:
+  containers:
+  - name: qos-demo-3-ctr
+    image: nginx
+    
+    
+    
+---
+#with multiple containers in a single pod, all the containers have to macth guarenteed in order for the pod qoS to be gauranteed, else
+#it will be burstable.
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: qos-demo-4
+  namespace: qos-example
+spec:
+  containers:
+
+  - name: qos-demo-4-ctr-1
+    image: nginx
+    resources:
+      requests:
+        memory: "200Mi"
+
+  - name: qos-demo-4-ctr-2
+    image: redis
+    
+#above example one is burstable and other is bestEffort overall will be burstable.
