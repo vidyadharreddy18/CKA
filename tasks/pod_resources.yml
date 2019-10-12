@@ -7,7 +7,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: linux-pod
-  namespace: mem-test
+  namespace: me-test
   labels: 
     type: webserver
 spec:
