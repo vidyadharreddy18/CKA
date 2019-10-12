@@ -1,0 +1,23 @@
+description:>
+  Assigning memory resources to pods and contaienrs by specifying memory limits and memory requests.
+  In the spec file we mention a new attribute as resources. resources.requests.limits, resources.limits.memory.
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: linux-pod
+  namespace: mem-test
+  labels: 
+    type: webserver
+spec:
+  containers:
+  - name: linux-container
+    image: polinux/stress
+    resources:  
+      requests:                            #this container requires a minimum memory of 100Mi
+        memory: "100Mi"
+      limits:                              #this container can use a maximum of 200Mi
+        memory: "200Mi"
+    command: ["stress"]
+    args: ["--vm", "1", "--vm-bytes", "150M", "--vm-hang", "1"]
