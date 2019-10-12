@@ -1,5 +1,8 @@
 description:>
   task4: creating pod to use volume for storage. 
+  emptyDir volume: emptydir is first created as soon as the pod gets assigned to a node and it exists as long as the 
+  pods keeps running on the node. Initially it is empty, the contaiers in the pod can write into this directory and this is 
+  available as long as pod is available irrespective of containers.
   
 apiVersion: v1
 kind: Pod
@@ -13,7 +16,7 @@ spec:
     - name: nginx-path
       mountPath: /data/storage
     volumes:
-    - name: nginx-data
+    - name: nginx-path
       emptyDir: {}                        #this empty dir willbe untill pod is deleted, events if container restarts the data will still be available.
  
  
