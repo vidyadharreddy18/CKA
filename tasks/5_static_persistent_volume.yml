@@ -1,0 +1,53 @@
+description:>
+  5. this task is about creating a static PV and attaching it to a Pod.
+  
+
+
+---
+#1. Admins will create the PV
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: my-PV
+spec:
+  capacity:
+    storage: "10Gi"
+  storageClass: manual
+  hostPath:
+    path: "/opt"
+  accessModes:
+    - ReadWriteOnce
+    
+    
+---
+#2. Users will claim the above PV.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-pvc
+spec:
+  resources:
+    requests:
+      storage: "10Gi"
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+    
+---
+#3. Users will specify this calim in pod definition file
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx
+    volumeMount:
+      - mountPath: "/home/opt/"
+        name: my volume
+  volumes:
+  - name: y-volume
+    PersistentVolumeClaim:
+      claimName: my-pvc 
+        
