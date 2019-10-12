@@ -1,6 +1,8 @@
 description:>
-  Assigning memory resources to pods and contaienrs by specifying memory limits and memory requests.
-  In the spec file we mention a new attribute as resources. resources.requests.limits, resources.limits.memory.
+  Task1: Assigning memory resources to pods and contaienrs by specifying memory limits and memory requests.
+  In the spec file we mention a new attribute as resources. resources.requests.memory, resources.limits.memory.
+  If we specify memory limits greater than the node available memory resources then pod will be in pending state.
+  if we specify the resources.requests.memory greater than the requests.limits.memory then pod will be in pending state.
 
 
 apiVersion: v1
