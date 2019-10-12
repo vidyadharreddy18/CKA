@@ -21,31 +21,29 @@ spec:
 #2. Users will claim the above PV.
 apiVersion: v1
 kind: PersistentVolumeClaim
-metadata:
-  name: my-pvc
-spec:
-  resources:
+metadata:  name: mypvc
+spec:  resources:
     requests:
-      storage: "10Gi"
+      storage: "4Gi"
   storageClassName: manual
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
     
 ---
 #3. Users will specify this calim in pod definition file
 apiVersion: v1
 kind: Pod
 metadata:
-  name: my-pod
+  name: mypod
 spec:
   containers:
   - name: nginx-container
     image: nginx
-    volumeMount:
-      - mountPath: "/home/opt/"
-        name: my volume
+    volumeMounts:
+     - mountPath: "/data"
+       name: urstorage
   volumes:
-  - name: y-volume
-    PersistentVolumeClaim:
-      claimName: my-pvc 
+  - name: urstorage
+    persistentVolumeClaim:
+      claimName: mypvc
         
