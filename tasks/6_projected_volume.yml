@@ -1,0 +1,27 @@
+description:>
+  using projected volumes we can map several existing volumes sources into same directory.
+  For this lets create two secrets as below
+  #kubectl create secret generic user --from-file=./username.txt
+  #kubectl create secret generic pass --from-file=./password.txt
+  
+  
+apiVersion: v1
+kind: Pod
+metadata:
+  name: projectedvolume
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx
+    volumeMounts:
+      - mountPath: "/projected"
+        name: all-in-one
+        readOnly: true
+  volumes:
+  - name: all-in-one
+    projected:
+      sources:
+      - secret:
+          name: user
+      - secret:
+         name: pass
