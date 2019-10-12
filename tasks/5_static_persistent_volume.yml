@@ -8,15 +8,13 @@ description:>
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: my-PV
+  name: mypv
 spec:
-  capacity:
-    storage: "10Gi"
-  storageClass: manual
+  capacity:    storage: "10Gi"
+  accessModes:  - ReadWriteOnce
+  storageClassName: manual
   hostPath:
-    path: "/opt"
-  accessModes:
-    - ReadWriteOnce
+   path: /data/
     
     
 ---
