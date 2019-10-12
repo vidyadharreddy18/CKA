@@ -1,2 +1,43 @@
 description:>
-  task4: creating pod to use volume for storage
+  task4: creating pod to use volume for storage. 
+  
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx
+    volumeMounts:
+    - name: nginx-path
+      mountPath: /data/storage
+    volumes:
+    - name: nginx-data
+      emptyDir: {}                        #this empty dir willbe untill pod is deleted, events if container restarts the data will still be available.
+ 
+ 
+
+---
+#using host directory. i.r directly mounting on to node directory. 
+#even if pod os deleted the data wills till be available.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx
+    volumeMounts:
+    - name: nginx-storage
+      mountPath: /opt/
+    volumes:
+    - name: nginx-data
+      hostPath: 
+       path: /data/
+       type: Directory
+    
+
+      
+      
